@@ -8,9 +8,9 @@ import FallingShapes from './components/FallingShapes';
 
 export default function Page() {
   return (
-    <div style={{ height: '100vh' }}>
-      <h1>My Vehicle Game</h1>
+    <div style={{ height: '100vh', backgroundColor: 'white' }}>
       <Canvas>
+      {/* <directionalLight position={[0,0,2]}/> */}
         <Physics>
           <Vehicle />
           <FallingShapes />

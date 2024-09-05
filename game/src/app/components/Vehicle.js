@@ -5,6 +5,7 @@ import { useFrame } from '@react-three/fiber';
 import { RigidBody, useRapier } from '@react-three/rapier';
 import { Box, Sphere, Cylinder } from '@react-three/drei';
 import * as THREE from 'three'; 
+import { OrbitControls } from '@react-three/drei';
 
 const Vehicle = () => {
   const vehicleRef = useRef();
@@ -46,10 +47,13 @@ const Vehicle = () => {
   return (
     // <RigidBody ref={vehicleRef} position={[0, 1, 0]} type="dynamic">
     <group>
-      <Box args={[2, 0.5, 1]} />
-      <Sphere args={[0.3]} position={[0, 0.2, 1]} />
-      <Cylinder args={[0.2, 0.2, 0.5, 16]} position={[-1, 0.2, -1]} />
-      <Cylinder args={[0.2, 0.2, 0.5, 16]} position={[1, 0.2, -1]} />
+    <directionalLight position={[0,0,5]}/>
+    <OrbitControls/>
+      <Box args={[1, 0.5, 0.5]} position={[0, 0.2, -0.5]} material-color="grey"/>
+      <Box args={[1, 0.4, 1]} material-color="grey"/>
+      <Sphere args={[0.25]} position={[0, -0.2, 0.6]} material-color="brown" />
+      <Cylinder args={[0.2, 0.2, 0.1, 16]} position={[-0.5, -0.2, -0.6]} rotation={[Math.PI / 2, 0, 4.7]} material-color="grey"/>
+      <Cylinder args={[0.2, 0.2, 0.1, 16]} position={[0.5, -0.2, -0.6]} rotation={[Math.PI / 2, 0, 4.7]} material-color="grey"/>
       </group>
     // </RigidBody>
   );
