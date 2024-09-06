@@ -1,46 +1,47 @@
 "use client";
 
-import { useEffect } from 'react';
-import { useRapier, useRigidBody } from '@react-three/rapier';
+import { useEffect, useState } from 'react';
+import { RigidBody } from '@react-three/rapier';
 import { Box, Sphere, Cone } from '@react-three/drei';
+import { v4 as uuidv4 } from 'uuid'; // For unique keys
 
-const FallingShape = ({ position }) => {
-  const { world } = useRapier();
-  const [ref] = useRigidBody({
-    type: 'dynamic',
-    position,
-  });
-
+// FallingShape component handles rendering of individual shapes
+const FallingShape = ({ position, shapeType }) => {
   return (
-    <group ref={ref}>
-      <Box args={[1, 1, 1]} />
-    </group>
+    <RigidBody type="dynamic" position={position}>
+      {shapeType === 'box' && <Box args={[1, 1, 1]} />}
+      {shapeType === 'sphere' && <Sphere args={[1]} />}
+      {shapeType === 'cone' && <Cone args={[1, 2]} />}
+    </RigidBody>
   );
 };
 
 const FallingShapes = () => {
-  const { world } = useRapier();
+  const [shapes, setShapes] = useState([]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       const x = Math.random() * 10 - 5;
       const z = Math.random() * 10 - 5;
-      const shape = Math.random();
-      const shapeType = shape < 0.33 ? 'box' : shape < 0.66 ? 'sphere' : 'cone';
-      
-      if (shapeType === 'box') {
-        <FallingShape position={[x, 10, z]} />
-      } else if (shapeType === 'sphere') {
-        <Sphere args={[1]} position={[x, 10, z]} />
-      } else {
-        <Cone args={[1, 2]} position={[x, 10, z]} />
-      }
-    }, 2000);
+      const shapeType = Math.random() < 0.33 ? 'box' : Math.random() < 0.66 ? 'sphere' : 'cone';
 
-    return () => clearInterval(interval);
-  }, [world]);
+      // Add a new shape to the shapes array
+      setShapes((prevShapes) => [
+        ...prevShapes,
+        { id: uuidv4(), position: [x, 10, z], shapeType },
+      ]);
+    }, 7000);
 
-  return null;
+    return () => clearInterval(interval); // Cleanup on component unmount
+  }, []);
+
+  return (
+    <>
+      {shapes.map(({ id, position, shapeType }) => (
+        <FallingShape key={id} position={position} shapeType={shapeType} />
+      ))}
+    </>
+  );
 };
 
 export default FallingShapes;
